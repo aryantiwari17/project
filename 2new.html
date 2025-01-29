@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Educational Site</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide-icons@0.11.2/dist/index.js"></script>
+</head>
+<body class="font-sans bg-gray-50">
+  <div class="flex min-h-screen">
+    <!-- Left Sidebar -->
+    <div class="w-1/4 p-4 bg-gray-800 text-white">
+      <h1 class="text-2xl font-bold mb-6">EduLogo</h1>
+      <ul class="space-y-4">
+        <li class="hover:text-gray-300 cursor-pointer">Dashboard</li>
+        <li class="hover:text-gray-300 cursor-pointer">Index</li>
+        <li class="hover:text-gray-300 cursor-pointer">Lessons</li>
+        <li class="hover:text-gray-300 cursor-pointer">Progress</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+      <h1 class="text-3xl font-bold mb-4">Explore Courses</h1>
+      <div class="flex gap-2 mb-6">
+        <input type="text" id="search" placeholder="Search courses..." class="border border-gray-300 px-4 py-2 rounded-lg" />
+        <button onclick="searchCourses()" class="bg-gray-600 text-white px-4 py-2 rounded-lg">Search</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="course-list"></div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="w-1/4 p-4 bg-gray-100 border-l">
+      <h2 class="text-xl font-bold mb-4">User Profile</h2>
+      <div class="relative flex flex-col items-center mb-4" id="avatar-container">
+        <img src="https://via.placeholder.com/100?text=User" alt="User Avatar" class="w-20 h-20 rounded-full mb-2" id="user-avatar" />
+        <div id="image-upload" class="hidden absolute top-full bg-white p-2 rounded-md shadow-lg flex flex-col items-center w-36 text-sm">
+          <label for="file-upload" class="cursor-pointer text-blue-500 hover:underline">
+            Choose File
+          </label>
+          <input type="file" id="file-upload" accept="image/*" class="hidden" onchange="handleImageUpload(event)" />
+        </div>
+      </div>
+      <h2 class="text-lg font-bold mt-4">Your Mentors</h2>
+      <div id="mentor-list"></div>
+    </div>
+  </div>
+
+  <script>
+    const courses = [
+      { title: "Python for Beginners", description: "Learn Python from scratch." },
+      { title: "Advanced JavaScript", description: "Master the intricacies of JS." },
+      { title: "Data Science Basics", description: "An introduction to data analysis." },
+    ];
+
+    const mentors = [
+      { name: "Alice Johnson", field: "Machine Learning", img: "https://via.placeholder.com/50" },
+      { name: "Bob Williams", field: "Web Development", img: "https://via.placeholder.com/50" },
+      { name: "Charlie Davis", field: "Cybersecurity", img: "https://via.placeholder.com/50" },
+    ];
+
+    // Populate courses
+    function displayCourses() {
+      const courseList = document.getElementById("course-list");
+      courseList.innerHTML = "";
+      courses.forEach(course => {
+        const card = document.createElement("div");
+        card.classList.add("p-4", "rounded-xl", "shadow-md", "bg-white");
+        card.innerHTML = `
+          <h2 class="text-xl font-semibold">${course.title}</h2>
+          <p class="text-gray-600">${course.description}</p>
+          <button class="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded-lg">Enroll Now</button>
+        `;
+        courseList.appendChild(card);
+      });
+    }
+
+    // Search courses
+    function searchCourses() {
+      const searchValue = document.getElementById("search").value.toLowerCase();
+      const filteredCourses = courses.filter(course =>
+        course.title.toLowerCase().includes(searchValue)
+      );
+      displayCourses(filteredCourses);
+    }
+
+    // Populate mentors
+    function displayMentors() {
+      const mentorList = document.getElementById("mentor-list");
+      mentorList.innerHTML = "";
+      mentors.forEach(mentor => {
+        const mentorCard = document.createElement("div");
+        mentorCard.classList.add("flex", "items-center", "gap-2", "p-2", "bg-white", "rounded-md", "shadow", "mb-2");
+        mentorCard.innerHTML = `
+          <img src="${mentor.img}" alt="${mentor.name}" class="w-10 h-10 rounded-full" />
+          <div>
+            <p class="font-semibold">${mentor.name}</p>
+            <p class="text-gray-600 text-sm">${mentor.field}</p>
+          </div>
+        `;
+        mentorList.appendChild(mentorCard);
+      });
+    }
+
+    // Handle image upload
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById("user-avatar").src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Show image upload on hover
+    document.getElementById("avatar-container").addEventListener("mouseover", function() {
+      document.getElementById("image-upload").classList.remove("hidden");
+    });
+    document.getElementById("avatar-container").addEventListener("mouseleave", function() {
+      document.getElementById("image-upload").classList.add("hidden");
+    });
+
+    // Initialize the page
+    displayCourses();
+    displayMentors();
+  </script>
+</body>
+</html>
